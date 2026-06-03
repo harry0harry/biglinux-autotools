@@ -9,7 +9,7 @@ Conjunto de scripts em Python desenvolvidos para automatizar o pós-instalação
 O **biglinux-autotools** nasceu da necessidade de evitar tarefas repetitivas ao configurar o sistema após uma formatação e ao realizar a manutenção do dia a dia. Com este projeto, você centraliza a instalação de programas essenciais e a limpeza profunda do sistema com apenas um comando no terminal.
 
 O repositório é composto por dois scripts principais:
-* **`setup.py`**: Focado no pós-instalação. Ele baixa seus aplicativos favoritos, ajusta configurações regionais e reinicia o computador.
+* **`setup.py`**: Focado no pós-instalação. Ele baixa seus aplicativos favoritos (incluindo o OBS Studio e plugins, navegadores e utilitários), ajusta configurações regionais do ZapZap para PT-BR e reinicia o computador.
 * **`atualizar_sistema.py`**: Focado na manutenção frequente. Ele sincroniza os repositórios oficiais, atualiza pacotes do AUR/Flatpak e elimina arquivos inúteis.
 
 ---
@@ -20,7 +20,7 @@ Os scripts utilizam a biblioteca nativa `subprocess` do Python para interagir di
 
 * **Gerenciamento Híbrido de Pacotes**: O script utiliza o `pamac` (gerenciador nativo do BigLinux) por ser capaz de lidar tanto com os repositórios oficiais da base Arch quanto com o **AUR** (Arch User Repository) de forma automatizada.
 * **Isolamento de Privilégios**: O script de atualização roda como usuário comum e só invoca o `sudo` internamente para tarefas que realmente exigem permissão administrativa (como limpar logs do sistema com `journalctl` ou pacotes órfãos com `pacman`). Isso impede que o gerenciador do AUR seja bloqueado por segurança.
-* **Tratamento de Strings e Arquivos**: O script do setup localiza e modifica arquivos de configuração `.desktop` do sistema (utilizando comandos como `sed`) para injetar variáveis de ambiente como `LANG=pt_BR.UTF-8`, garantindo correções de interface e idioma para aplicativos específicos.
+* **Tratamento de Strings e Arquivos**: O script do setup localiza e modifica arquivos de configuração `.desktop` do sistema (utilizando comandos como `sed`) ou aplica overrides de ambiente para forçar o idioma `LANG=pt_BR.UTF-8`, garantindo correções de interface e idioma para aplicativos específicos como o ZapZap.
 
 ---
 
@@ -83,6 +83,9 @@ Agradeço à maravilhosa comunidade do **BigLinux** e aos desenvolvedores por cr
 
 Se você tiver dúvidas, sugestões de melhoria ou quiser trocar uma ideia sobre desenvolvimento e Linux, pode me encontrar em:
 
-* **E-mail:** [harry.ribeiro.dev@gmail.com](https://www.google.com/search?q=mailto%3Aharry.ribeiro.dev%40gmail.com)
+* **E-mail:** harry.ribeiro.dev@gmail.com
 * **Instagram:** [@hazzy.dev](https://www.instagram.com/hazzy.dev?igsh=MTcwNXk1cjd0cjNrNw==)
 
+```
+
+```
