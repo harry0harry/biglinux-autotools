@@ -33,7 +33,6 @@ def instalar_pacotes():
         "partitionmanager",
         "python-pip",
         "python-requests",
-        "zapzap",
         "qbittorrent",
         "qbittorrent-nox",
         
