@@ -30,7 +30,7 @@ Abra o seu terminal e siga os passos abaixo:
 
 ### 1. Clonar o repositório e acessar a pasta
 ```bash
-git clone [https://github.com/Harry-Ribeirio-Hub/biglinux-autotools.git](https://github.com/Harry-Ribeirio-Hub/biglinux-autotools.git)
+git clone https://github.com/Harry-Ribeirio-Hub/biglinux-autotools.git
 cd biglinux-autotools
 
 ```
