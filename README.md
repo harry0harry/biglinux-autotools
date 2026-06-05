@@ -73,7 +73,7 @@ Agradeço à maravilhosa comunidade do **BigLinux** e aos desenvolvedores por cr
 
 ## 📬 Contato
 
-Se você tiver dúvidas, sugestões de melhoria, uma verção de setup personalizada ou apenas quiser trocar uma ideia sobre desenvolvimento e Linux, pode me encontrar em:
+Se você tiver dúvidas, sugestões de melhoria, uma versão de setup personalizada ou apenas quiser trocar uma ideia sobre desenvolvimento e Linux, pode me encontrar em:
 
 * **E-mail:** harry.ribeiro.dev@gmail.com
 * **LinkTree:** [CLICK AQUI](https://linktr.ee/harry.ribeiro.dev)
