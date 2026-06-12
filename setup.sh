@@ -14,6 +14,7 @@ VENV_DIR="$HIDDEN_DIR/venv"
 VENV_PIP="$VENV_DIR/bin/pip"
 RELATORIO="$HOME_DIR/Resumo_Instalacao.md"
 INSTALAR_PYTHON="n" # Padrão é não instalar
+INSTALAR_OBS="n"    # Padrão é não instalar
 
 # Listas para o relatório final
 declare -a RELATORIO_SUCESSOS=()
@@ -43,6 +44,21 @@ perguntar_python() {
     else
         echo -e "${AMARELO}Instalação do Python ignorada.${NC}"
         RELATORIO_AVISOS+=("- A instalação do Ambiente Python Master foi ignorada pelo usuário.")
+    fi
+}
+
+perguntar_obs() {
+    echo -e "\n${AZUL}==================================================${NC}"
+    echo -e "${VERDE}             INSTALAÇÃO DO OBS STUDIO             ${NC}"
+    echo -e "${AZUL}==================================================${NC}"
+    
+    read -p "Deseja baixar e instalar o OBS Studio e seus plugins? (s/n): " resposta
+    if [[ "$resposta" =~ ^[Ss]$ ]]; then
+        INSTALAR_OBS="s"
+        echo -e "${VERDE}O OBS Studio será instalado.${NC}"
+    else
+        echo -e "${AMARELO}Instalação do OBS Studio ignorada.${NC}"
+        RELATORIO_AVISOS+=("- A instalação do OBS Studio foi ignorada pelo usuário.")
     fi
 }
 
@@ -80,19 +96,23 @@ instalar_pacotes() {
     echo -e "${VERDE}    INICIANDO INSTALAÇÃO DE PACOTES VIA PAMAC     ${NC}"
     echo -e "${AZUL}==================================================${NC}"
 
+    # Firefox removido da lista abaixo
     APPS_GERAIS=(
         "7zip" "ark" "btop" "dolphin" "dolphin-plugins" "fastfetch"
-        "firefox" "flatpak" "gwenview" "kamoso" "kate" "kdeconnect"
+        "flatpak" "gwenview" "kamoso" "kate" "kdeconnect"
         "konsole" "libreoffice-fresh-pt-br" "nano" "nano-syntax-highlighting"
         "otf-font-awesome" "partitionmanager" "qbittorrent" "qbittorrent-nox"
     )
 
-    APPS_OBS=(
-        "obs-studio" "obs-backgroundremoval" "obs-gstreamer" "obs-vkcapture"
-    )
-
     instalar_grupo "Aplicativos Gerais" "${APPS_GERAIS[@]}"
-    instalar_grupo "OBS Studio e Plugins" "${APPS_OBS[@]}"
+
+    # Instala o OBS apenas se o usuário aceitou
+    if [ "$INSTALAR_OBS" == "s" ]; then
+        APPS_OBS=(
+            "obs-studio" "obs-backgroundremoval" "obs-gstreamer" "obs-vkcapture"
+        )
+        instalar_grupo "OBS Studio e Plugins" "${APPS_OBS[@]}"
+    fi
 
     # Instala o Python via Pamac apenas se o usuário aceitou
     if [ "$INSTALAR_PYTHON" == "s" ]; then
@@ -167,35 +187,6 @@ configurar_ambiente_python() {
     echo -e "\n${VERDE}[SUCESSO] Ambiente Python Master atualizado!${NC}"
 }
 
-configurar_zapzap_ptbr() {
-    echo -e "\n${AZUL}==================================================${NC}"
-    echo -e "${VERDE}       CONFIGURANDO ZAPZAP PARA PORTUGUÊS         ${NC}"
-    echo -e "${AZUL}==================================================${NC}"
-    
-    ATALHO_SISTEMA="/usr/share/applications/com.rtmrosario.zapzap.desktop"
-    ATALHO_FLATPAK="/var/lib/flatpak/exports/share/applications/com.rtmrosario.zapzap.desktop"
-    CONFIGURADO=0
-
-    for caminho in "$ATALHO_SISTEMA" "$ATALHO_FLATPAK"; do
-        if [ -f "$caminho" ]; then
-            sudo sed -i 's/Exec=zapzap/Exec=env LANG=pt_BR.UTF-8 zapzap/g' "$caminho" 2>/dev/null
-            sudo sed -i 's/Exec=flatpak run com.rtmrosario.zapzap/Exec=env LANG=pt_BR.UTF-8 flatpak run com.rtmrosario.zapzap/g' "$caminho" 2>/dev/null
-            CONFIGURADO=1
-        fi
-    done
-
-    if [ $CONFIGURADO -eq 1 ]; then
-        echo -e "${VERDE}ZapZap configurado em Português com sucesso (atalho modificado)!${NC}"
-        RELATORIO_SUCESSOS+=("- Configuração Regional do ZapZap (Atalhos do Sistema)")
-    else
-        echo "Aplicando configuração de idioma via Flatpak global..."
-        flatpak override --user --env=LANG=pt_BR.UTF-8 com.rtmrosario.zapzap 2>/dev/null
-        sudo flatpak override --system --env=LANG=pt_BR.UTF-8 com.rtmrosario.zapzap 2>/dev/null
-        echo -e "${VERDE}ZapZap configurado via overrides do Flatpak.${NC}"
-        RELATORIO_SUCESSOS+=("- Configuração Regional do ZapZap (Overrides do Flatpak)")
-    fi
-}
-
 gerar_relatorio() {
     echo -e "\n${AZUL}==================================================${NC}"
     echo -e "${VERDE}        GERANDO RELATÓRIO DE INSTALAÇÃO           ${NC}"
@@ -261,8 +252,8 @@ finalizar_e_reiniciar() {
 # --- Fluxo Principal ---
 verificar_nao_root
 perguntar_python
+perguntar_obs
 instalar_pacotes
 configurar_ambiente_python
-configurar_zapzap_ptbr
 gerar_relatorio
 finalizar_e_reiniciar
